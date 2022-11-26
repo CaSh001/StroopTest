@@ -58,10 +58,10 @@ class Stroop extends Phaser.Scene
             this.isGameOver = true;
             for(var i = 0; i < 5; i++){
                 for(var j = 0; j < 10; j++){
-                    this.arr[i][j].setText("");
+                    this.arr[i][j].destroy();
                 }
             }
-            this.finishButton.inputEnabled = false;
+            this.finishButton.disableInteractive()
             var text = this.add.text(this.cameras.main.centerX - 250, this.cameras.main.centerY, "Out of time.", this.textStyleFail);
         }
     
@@ -77,8 +77,9 @@ class Stroop extends Phaser.Scene
         this.level += 1;
 
         if(this.level == 1){
-            for(var i = 0; i < 5; i++){
-                for(var j = 0; j < 10; j++){
+            this.titleText.setText("Stroop test - Subset 2")
+            for(var i = 0; i < this.content.length; i++){
+                for(var j = 0; j < this.content[i].length; j++){
                     switch(this.content[i][j]){
                     case this.colors[0]:
                         this.arr[i][j].setStyle(this.textStyleRed);
@@ -105,8 +106,9 @@ class Stroop extends Phaser.Scene
             }
         }
         else if(this.level == 2){
-            for(var i = 0; i < 5; i++){
-                for(var j = 0; j < 10; j++){
+            this.titleText.setText("Stroop test - Subset 3")
+            for(var i = 0; i < this.content.length; i++){
+                for(var j = 0; j < this.content[i].length; j++){
                     let randomNum = this.randomRange(0,4);
                     switch(randomNum){
                     case 0:
@@ -129,24 +131,24 @@ class Stroop extends Phaser.Scene
     }
 
     clickColor(x){
-        console.log(this.content)
         if(this.level == 1){ //subset 1
-            if(this.colors[x] == this.content[this.progress1 / 10][this.progress1 % 10]){
+            if(this.colors[x] == this.content[parseInt(this.progress1 / 10)][this.progress1 % 10]){
             this.progress1 += 1;
-            console.log(this.progress1)
-
+            }
+            if(this.progress1 >= this.arr.length * this.arr[0].length){
+                console.log("May now progress to subset 3")
             }
         }
     }
         
     create() {
         this.titleText = this.add.text(this.cameras.main.centerX,10, 'Stroop test - Subset 1', this.textStyle).setOrigin(0.5,0);
-        for(var x = 0; x < 5; x++){
+        for(var x = 0; x < 10; x++){
             this.arr[x] = [];
             this.content[x] = [];
-            for(var y = 0; y < 10; y++){
+            for(var y = 0; y < 5; y++){
                 let randomNum = this.randomRange(0,4);
-                this.arr[x][y] =this.add.text(x*(this.cameras.main.width/5) + 100, y * (this.cameras.main.height/13) + 70, this.colors[randomNum], this.textStyle).setOrigin(0.5);;
+                this.arr[x][y] =this.add.text(y*(this.cameras.main.width/5) + 100, x * (this.cameras.main.height/13) + 70, this.colors[randomNum], this.textStyle).setOrigin(0.5);;
                 //this.arr[i][j].anchor.set(0.5, 0.5);
                 this.content[x][y] = this.colors[randomNum];
             }
@@ -161,7 +163,7 @@ class Stroop extends Phaser.Scene
             .on('pointerover', () => this.finishButton.setStyle({ fill: '#f39c12' }))
             .on('pointerout', () => this.finishButton.setStyle({ fill: '#FFF' }))
             .setOrigin(0.5);
-        setInterval(() => this.addTimer(),"1000"); //keep this here so it's not so dependant on fps
+        setInterval(() => this.addTimer(),"1000"); //I will implement a better measurement of time in the future.
     }
 
     update() {
