@@ -15,11 +15,11 @@ class Stroop extends Phaser.Scene
     constructor ()
     {
         super();
-        this.textStyle= { font: "25px Arial", fill: "#000000", align:"center" };
-        this.textStyleRed= { font: "25px Arial", fill: "#FF0000", align:"center" };
-        this.textStyleBlue= { font: "25px Arial", fill: " #0000FF", align:"center" };
-        this.textStyleYellow= { font: "25px Arial", fill: "#FFa500", align:"center" };
-        this.textStyleGreen= { font: "25px Arial", fill: "#008000", align:"center" };
+        this.textStyle= { font: "22px Arial", fill: "#000000", align:"center" };
+        this.textStyleRed= { font: "22px Arial", fill: "#FF0000", align:"center" };
+        this.textStyleBlue= { font: "22px Arial", fill: " #0000FF", align:"center" };
+        this.textStyleYellow= { font: "22px Arial", fill: "#FFa500", align:"center" };
+        this.textStyleGreen= { font: "22px Arial", fill: "#008000", align:"center" };
         this.textStyleFail= { font: "100px Arial", fill: "#000000", align:"center" };
 
         this.arr = [[]];
@@ -33,8 +33,9 @@ class Stroop extends Phaser.Scene
         
         this.width = 0;
         this.height = 0;
-        
+
         this.finishButton = undefined;
+        this.colorButtons = [];
     }
 
 
@@ -61,6 +62,7 @@ class Stroop extends Phaser.Scene
                     this.arr[i][j].setText("");
                 }
             }
+            this.finishButton.inputEnabled = false;
             var text = this.add.text(this.cameras.main.centerX - 250, this.cameras.main.centerY, "Out of time.", this.textStyleFail);
         }
     
@@ -94,9 +96,13 @@ class Stroop extends Phaser.Scene
                     }
                 }
             }
-            for(var x = 0; x < this.colors.length; x++){
-                    //button = this.add.button(this.width/2, 700, undefined, this.clickColor, this, 2, 1, 0);
-                    //button.onInputOut.add(this.colors[x], this);
+            for(let x = 0; x < this.colors.length; x++){
+                this.colorButtons[x] = this.add.text(this.cameras.main.centerX -280 + x*200, this.cameras.main.centerY + 300, this.colors[x], { font: "25px Arial", align:"center", borderradius:"25px", })
+                .setOrigin(0.5)
+                .setPadding(10)
+                .setStyle({ fill: '#000', backgroundColor: '#eee'  })
+                .setInteractive({ useHandCursor: true })
+                .on('pointerdown', () => this.clickColor(x))
             }
         }
         else if(this.level == 2){
@@ -123,8 +129,8 @@ class Stroop extends Phaser.Scene
 
     }
 
-    clickColor(){
-
+    clickColor(x){
+        console.log(x)
     }
         
     create() {
@@ -133,13 +139,13 @@ class Stroop extends Phaser.Scene
             this.content[i] = [];
             for(var j = 0; j < 10; j++){
                 let randomNum = this.randomRange(0,4);
-                this.arr[i][j] =this.add.text(this.cameras.main.centerX + (170 * (i - 2)), j * 60 + 60, this.colors[randomNum], this.textStyle);
+                this.arr[i][j] =this.add.text(this.cameras.main.centerX + (150 * (i - 2)), j * 60 + 60, this.colors[randomNum], this.textStyle);
                 //this.arr[i][j].anchor.set(0.5, 0.5);
                 this.content[i][j] = this.colors[randomNum];
             }
         }
         
-        this.finishButton = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY + 300, 'Start game', { font: "25px Arial", align:"center", borderradius:"25px", })
+        this.finishButton = this.add.text(this.cameras.main.centerX, 750, 'Finished', { font: "20px Arial", align:"center", borderradius:"25px", })
             .setOrigin(0.5)
             .setPadding(10)
             .setStyle({ backgroundColor: '#000' })
@@ -151,14 +157,13 @@ class Stroop extends Phaser.Scene
     }
 
     update() {
-        
+        //this.render();
     }
 
     render() {
 
     }
     
-
 }
 config = {
     type: Phaser.AUTO,
