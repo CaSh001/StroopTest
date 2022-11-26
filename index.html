@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>phasr</title>
+    </head>
+    <style>
+    html,
+    body {
+      margin: 0 auto;
+      padding: 0;
+       100%;
+      height: 100%;
+    }
+
+    #game {
+        position:relative;
+      margin: 10px auto;
+
+      height: 640px;
+    }
+  </style>
+    <body>
+    <div id="game">
+     <div id="btn" style = "position: absolute;top:600px;left: 50%;margin-top: -20px;margin-left: -50px;background-color: black;width:100px;height:40px;text-align:center;line-height:40px;color:white;cursor:pointer;" onclick = "changeColor()">finish</div>
+    </div>
+        <script src="js/phaser.min.js" type="text/javascript" charset="utf-8"></script>
+
+        <script type="text/javascript">
+var game=new Phaser.Game(800,600,Phaser.AUTO,'game',{preload:preload,create:create,update:update});
+function preload() {
+      //  game.load.crossOrigin = "anonymous";
+ //   game.load.image("button","assets/Button.jpg")
+    game.scale.pageAlignHorizontally = true;
+    game.scale.pageAlignVertically = true;
+}
+
+var textStyle= { font: "20px Arial", fill: "#000000", align:"center" };
+var textStyleRed= { font: "20px Arial", fill: "#FF0000", align:"center" };
+var textStyleBlue= { font: "20px Arial", fill: " #0000FF", align:"center" };
+var textStyleYellow= { font: "20px Arial", fill: "#FFa500", align:"center" };
+var textStyleGreen= { font: "20px Arial", fill: "#008000", align:"center" };
+var failTextStyle= { font: "100px Arial", fill: "#000000", align:"center" };
+var arr = [[]];
+var content = [];
+var timer = 0;
+var isGameOver = false;
+var level = 0;
+function addTimer(){
+    if(isGameOver == false){
+        timer += 1;
+        console.log(timer);
+    }
+
+    if(timer >= 49 && isGameOver == false && level < 3){
+        isGameOver = true;
+        for(var i = 0; i < 5; i++){
+            for(var j = 0; j < 10; j++){
+                arr[i][j].setText("");
+            }
+        }
+        var text = game.add.text(game.world.centerX, game.world.centerY, "Fail", failTextStyle);
+        text.anchor.set(0.5, 0.5);
+    }
+   
+}
+
+function changeColor(){
+    
+    timer = 0;
+    level = level + 1;
+    if(level == 1){
+        for(var i = 0; i < 5; i++){
+            for(var j = 0; j < 10; j++){
+                if(content[i][j] == "Red"){
+                    arr[i][j].setStyle(textStyleRed);
+                }
+                if(content[i][j] == "Blue"){
+                    arr[i][j].setStyle(textStyleBlue);
+                }
+                if(content[i][j] == "Green"){
+                    arr[i][j].setStyle(textStyleGreen);
+                }
+                if(content[i][j] == "Yellow"){
+                    arr[i][j].setStyle(textStyleYellow);
+                }
+            }
+        }
+    }
+    else if(level == 2){
+        for(var i = 0; i < 5; i++){
+            for(var j = 0; j < 10; j++){
+                randomNum = randomRange(0,4);
+                if(randomNum == 0){
+                    arr[i][j].setStyle(textStyleRed);
+                }
+                if(randomNum == 1){
+                    arr[i][j].setStyle(textStyleBlue);
+                }
+                if(randomNum == 2){
+                    arr[i][j].setStyle(textStyleGreen);
+                }
+                if(randomNum == 3){
+                    arr[i][j].setStyle(textStyleYellow);
+                }
+            }
+        }
+    }
+
+}
+    
+function create() {
+
+    arr = new Array();
+    game.stage.smoothed=false;
+    game.stage.backgroundColor = '#ffffff';
+    var str = ['Red','Blue','Green','Yellow'];
+    for(var i = 0; i < 5; i++){
+        arr[i] = [];
+        content[i] = [];
+        for(var j = 0; j < 10; j++){
+            randomNum = randomRange(0,4);
+            arr[i][j] =game.add.text(game.world.centerX + (150 * (i - 2)), j * 50 + 50, str[randomNum], textStyle);
+            arr[i][j].anchor.set(0.5, 0.5);
+            content[i][j] = str[randomNum];
+        }
+    }
+    setInterval("addTimer()","1000");
+}
+
+function update() {
+
+}
+
+function render() {
+
+}
+
+function randomRange(min, max) { // min最小值，max最大值
+
+    return Math.floor(Math.random() * (max - min)) + min;
+
+}
+        </script>
+           
+    </body>
+</html>
