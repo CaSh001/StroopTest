@@ -21,12 +21,12 @@
   </style>
     <body>
     <div id="game">
-     <div id="btn" style = "position: absolute;top:600px;left: 50%;margin-top: -20px;margin-left: -50px;background-color: black;width:100px;height:40px;text-align:center;line-height:40px;color:white;cursor:pointer;" onclick = "changeColor()">Finish Subset</div>
+     <div id="btn" style = "position: absolute;top:700px;left: 50%;margin-top: -20px;margin-left: -50px;background-color: black;width:100px;height:40px;text-align:center;line-height:40px;color:white;cursor:pointer;" onclick = "changeColor()">Finish Subset</div>
     </div>
         <script src="js/phaser.min.js" type="text/javascript" charset="utf-8"></script>
 
         <script type="text/javascript">
-var game=new Phaser.Game(800,600,Phaser.AUTO,'game',{preload:preload,create:create,update:update});
+var game=new Phaser.Game(1024,768,Phaser.AUTO,'game',{preload:preload,create:create,update:update});
 function preload() {
       //  game.load.crossOrigin = "anonymous";
  //   game.load.image("button","assets/Button.jpg")
@@ -34,11 +34,11 @@ function preload() {
     game.scale.pageAlignVertically = true;
 }
 
-var textStyle= { font: "20px Arial", fill: "#000000", align:"center" };
-var textStyleRed= { font: "20px Arial", fill: "#FF0000", align:"center" };
-var textStyleBlue= { font: "20px Arial", fill: " #0000FF", align:"center" };
-var textStyleYellow= { font: "20px Arial", fill: "#FFa500", align:"center" };
-var textStyleGreen= { font: "20px Arial", fill: "#008000", align:"center" };
+var textStyle= { font: "25px Arial", fill: "#000000", align:"center" };
+var textStyleRed= { font: "25px Arial", fill: "#FF0000", align:"center" };
+var textStyleBlue= { font: "25px Arial", fill: " #0000FF", align:"center" };
+var textStyleYellow= { font: "25px Arial", fill: "#FFa500", align:"center" };
+var textStyleGreen= { font: "25px Arial", fill: "#008000", align:"center" };
 var failTextStyle= { font: "100px Arial", fill: "#000000", align:"center" };
 var arr = [[]];
 var content = [];
@@ -66,23 +66,22 @@ function addTimer(){
 }
 
 function changeColor(){
-    
     timer = 0;
     level = level + 1;
     if(level == 1){
         for(var i = 0; i < 5; i++){
             for(var j = 0; j < 10; j++){
                 switch(content[i][j]){
-                case "Red":
+                case "RED":
                     arr[i][j].setStyle(textStyleRed);
                     break;
-                case "Blue":
+                case "BLUE":
                     arr[i][j].setStyle(textStyleBlue);
                     break;
-                case "Green":
+                case "GREEN":
                     arr[i][j].setStyle(textStyleGreen);
                     break;
-                case "Yellow":
+                case "YELLOW":
                     arr[i][j].setStyle(textStyleYellow);
                     break;
                 }
@@ -117,13 +116,13 @@ function create() {
     arr = new Array();
     game.stage.smoothed=false;
     game.stage.backgroundColor = '#ffffff';
-    var str = ['Red','Blue','Green','Yellow'];
+    var str = ['RED','BLUE','GREEN','YELLOW'];
     for(var i = 0; i < 5; i++){
         arr[i] = [];
         content[i] = [];
         for(var j = 0; j < 10; j++){
             randomNum = randomRange(0,4);
-            arr[i][j] =game.add.text(game.world.centerX + (150 * (i - 2)), j * 50 + 50, str[randomNum], textStyle);
+            arr[i][j] =game.add.text(game.world.centerX + (170 * (i - 2)), j * 60 + 60, str[randomNum], textStyle);
             arr[i][j].anchor.set(0.5, 0.5);
             content[i][j] = str[randomNum];
         }
