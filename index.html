@@ -30,12 +30,12 @@ class Stroop extends Phaser.Scene
         this.timelimit = 45
         this.level = 0;
         this.isGameOver = false;
+        this.progress1 = 0;
         
-        this.width = 0;
-        this.height = 0;
 
         this.finishButton = undefined;
         this.colorButtons = [];
+        this.titleText = undefined;
     }
 
 
@@ -50,7 +50,6 @@ class Stroop extends Phaser.Scene
     
 
     addTimer(){
-        console.log(this.timer)
         if(this.isGameOver == false){
             this.timer += 1;
         }
@@ -130,18 +129,26 @@ class Stroop extends Phaser.Scene
     }
 
     clickColor(x){
-        console.log(x)
+        console.log(this.content)
+        if(this.level == 1){ //subset 1
+            if(this.colors[x] == this.content[this.progress1 / 10][this.progress1 % 10]){
+            this.progress1 += 1;
+            console.log(this.progress1)
+
+            }
+        }
     }
         
     create() {
-        for(var i = 0; i < 5; i++){
-            this.arr[i] = [];
-            this.content[i] = [];
-            for(var j = 0; j < 10; j++){
+        this.titleText = this.add.text(this.cameras.main.centerX,10, 'Stroop test - Subset 1', this.textStyle).setOrigin(0.5,0);
+        for(var x = 0; x < 5; x++){
+            this.arr[x] = [];
+            this.content[x] = [];
+            for(var y = 0; y < 10; y++){
                 let randomNum = this.randomRange(0,4);
-                this.arr[i][j] =this.add.text(this.cameras.main.centerX + (150 * (i - 2)), j * 60 + 60, this.colors[randomNum], this.textStyle);
+                this.arr[x][y] =this.add.text(x*(this.cameras.main.width/5) + 100, y * (this.cameras.main.height/13) + 70, this.colors[randomNum], this.textStyle).setOrigin(0.5);;
                 //this.arr[i][j].anchor.set(0.5, 0.5);
-                this.content[i][j] = this.colors[randomNum];
+                this.content[x][y] = this.colors[randomNum];
             }
         }
         
@@ -153,6 +160,7 @@ class Stroop extends Phaser.Scene
             .on('pointerdown', () => this.changeColor())
             .on('pointerover', () => this.finishButton.setStyle({ fill: '#f39c12' }))
             .on('pointerout', () => this.finishButton.setStyle({ fill: '#FFF' }))
+            .setOrigin(0.5);
         setInterval(() => this.addTimer(),"1000"); //keep this here so it's not so dependant on fps
     }
 
