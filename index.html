@@ -22,15 +22,17 @@ class Stroop extends Phaser.Scene
         this.textStyleGreen= { font: "22px Arial", fill: "#008000", align:"center" };
         this.textStyleFail= { font: "100px Arial", fill: "#000000", align:"center" };
 
-        this.arr = [[]];
+        this.arr = [];
         this.content = [];
         this.colors = ['RED','BLUE','GREEN','YELLOW'];
+        this.colorSolutions = [];
 
         this.timer = 0;
         this.timelimit = 45
         this.level = 0;
         this.isGameOver = false;
         this.progress1 = 0;
+        this.progress2 = 0;
         
 
         this.finishButton = undefined;
@@ -96,7 +98,7 @@ class Stroop extends Phaser.Scene
                     }
                 }
             }
-            for(let x = 0; x < this.colors.length; x++){
+            for(let x = 0; x < this.colors.length; x++){ //draw the color selection buttons
                 this.colorButtons[x] = this.add.text(this.cameras.main.centerX -280 + x*200, this.cameras.main.centerY + 300, this.colors[x], { font: "25px Arial", align:"center", borderradius:"25px", })
                 .setOrigin(0.5)
                 .setPadding(10)
@@ -108,8 +110,12 @@ class Stroop extends Phaser.Scene
         else if(this.level == 2){
             this.titleText.setText("Stroop test - Subset 3")
             for(var i = 0; i < this.content.length; i++){
+                this.colorSolutions[i] = []
+
                 for(var j = 0; j < this.content[i].length; j++){
                     let randomNum = this.randomRange(0,4);
+                    this.arr[i][j].visible = true;
+
                     switch(randomNum){
                     case 0:
                         this.arr[i][j].setStyle(this.textStyleRed);
@@ -124,19 +130,39 @@ class Stroop extends Phaser.Scene
                         this.arr[i][j].setStyle(this.textStyleYellow);
                         break;
                     }
+                    this.colorSolutions[i][j] = this.colors[randomNum]
                 }
             }
         }
 
     }
 
-    clickColor(x){
-        if(this.level == 1){ //subset 1
-            if(this.colors[x] == this.content[parseInt(this.progress1 / 10)][this.progress1 % 10]){
-            this.progress1 += 1;
+    clickColor(clickedIndex){
+        if(this.level == 1){ //subset 2
+            let x = parseInt(this.progress1 / 5)
+            let y = this.progress1 % 5
+
+            if(this.colors[clickedIndex] == this.content[x][y]){
+                this.progress1 += 1;
+                this.arr[x][y].visible = false;
             }
+
             if(this.progress1 >= this.arr.length * this.arr[0].length){
                 console.log("May now progress to subset 3")
+            }
+        }
+
+        if(this.level == 2){ //subset 3
+            let x = parseInt(this.progress2 / 5)
+            let y = this.progress2 % 5
+
+            if(this.colors[clickedIndex] == this.colorSolutions[x][y]){
+                this.progress2 += 1;
+                this.arr[x][y].destroy();
+            }
+
+            if(this.progress2 >= this.arr.length * this.arr[0].length){
+                console.log("All subsets finished!")
             }
         }
     }
@@ -149,7 +175,6 @@ class Stroop extends Phaser.Scene
             for(var y = 0; y < 5; y++){
                 let randomNum = this.randomRange(0,4);
                 this.arr[x][y] =this.add.text(y*(this.cameras.main.width/5) + 100, x * (this.cameras.main.height/13) + 70, this.colors[randomNum], this.textStyle).setOrigin(0.5);;
-                //this.arr[i][j].anchor.set(0.5, 0.5);
                 this.content[x][y] = this.colors[randomNum];
             }
         }
@@ -171,7 +196,6 @@ class Stroop extends Phaser.Scene
     }
 
     render() {
-
     }
     
 }
