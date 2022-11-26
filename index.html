@@ -4,146 +4,171 @@
         <meta charset="UTF-8">
         <title>Stroop Test</title>
     </head>
-    <style>
-    html,
-    body {
-      margin: 0 auto;
-      padding: 0;
-      height: 100%;
-    }
-
-    #game {
-        position:relative;
-      margin: 10px auto;
-
-      height: 640px;
-    }
-  </style>
     <body>
-    <div id="game">
-     <div id="btn" style = "position: absolute;top:700px;left: 50%;margin-top: -20px;margin-left: -50px;background-color: black;width:100px;height:40px;text-align:center;line-height:40px;color:white;cursor:pointer;" onclick = "changeColor()">Finish Subset</div>
-    </div>
-        <script src="js/phaser.min.js" type="text/javascript" charset="utf-8"></script>
+<div id="game">
+<script src="js/phaser.min.js" type="text/javascript" charset="utf-8"></script>
 
-        <script type="text/javascript">
-var game=new Phaser.Game(1024,768,Phaser.AUTO,'game',{preload:preload,create:create,update:update});
-function preload() {
-      //  game.load.crossOrigin = "anonymous";
- //   game.load.image("button","assets/Button.jpg")
-    game.scale.pageAlignHorizontally = true;
-    game.scale.pageAlignVertically = true;
-}
+<script type="text/javascript">
 
-var textStyle= { font: "25px Arial", fill: "#000000", align:"center" };
-var textStyleRed= { font: "25px Arial", fill: "#FF0000", align:"center" };
-var textStyleBlue= { font: "25px Arial", fill: " #0000FF", align:"center" };
-var textStyleYellow= { font: "25px Arial", fill: "#FFa500", align:"center" };
-var textStyleGreen= { font: "25px Arial", fill: "#008000", align:"center" };
-var failTextStyle= { font: "100px Arial", fill: "#000000", align:"center" };
-var arr = [[]];
-var content = [];
-var timer = 0;
-var isGameOver = false;
-var level = 0;
-var timelimit = 45
+class Stroop extends Phaser.Scene
+{
+    constructor ()
+    {
+        super();
+        this.textStyle= { font: "25px Arial", fill: "#000000", align:"center" };
+        this.textStyleRed= { font: "25px Arial", fill: "#FF0000", align:"center" };
+        this.textStyleBlue= { font: "25px Arial", fill: " #0000FF", align:"center" };
+        this.textStyleYellow= { font: "25px Arial", fill: "#FFa500", align:"center" };
+        this.textStyleGreen= { font: "25px Arial", fill: "#008000", align:"center" };
+        this.textStyleFail= { font: "100px Arial", fill: "#000000", align:"center" };
 
-function addTimer(){
-    if(isGameOver == false){
-        timer += 1;
+        this.arr = [[]];
+        this.content = [];
+        this.colors = ['RED','BLUE','GREEN','YELLOW'];
+
+        this.timer = 0;
+        this.timelimit = 45
+        this.level = 0;
+        this.isGameOver = false;
+        
+        this.width = 0;
+        this.height = 0;
+        
+        this.finishButton = undefined;
     }
 
-    if(timer >= timelimit && isGameOver == false && level < 3){
-        isGameOver = true;
-        for(var i = 0; i < 5; i++){
-            for(var j = 0; j < 10; j++){
-                arr[i][j].setText("");
-            }
-        }
-        var text = game.add.text(game.world.centerX, game.world.centerY, "Fail", failTextStyle);
-        text.anchor.set(0.5, 0.5);
-    }
-   
-}
 
-function changeColor(){
-    timer = 0;
-    level = level + 1;
-    if(level == 1){
-        for(var i = 0; i < 5; i++){
-            for(var j = 0; j < 10; j++){
-                switch(content[i][j]){
-                case "RED":
-                    arr[i][j].setStyle(textStyleRed);
-                    break;
-                case "BLUE":
-                    arr[i][j].setStyle(textStyleBlue);
-                    break;
-                case "GREEN":
-                    arr[i][j].setStyle(textStyleGreen);
-                    break;
-                case "YELLOW":
-                    arr[i][j].setStyle(textStyleYellow);
-                    break;
-                }
-            }
-        }
-    }
-    else if(level == 2){
-        for(var i = 0; i < 5; i++){
-            for(var j = 0; j < 10; j++){
-                randomNum = randomRange(0,4);
-                switch(randomNum){
-                case 0:
-                    arr[i][j].setStyle(textStyleRed);
-                    break;
-                case 1:
-                    arr[i][j].setStyle(textStyleBlue);
-                    break;
-                case 2:
-                    arr[i][j].setStyle(textStyleGreen);
-                    break;
-                case 3:
-                    arr[i][j].setStyle(textStyleYellow);
-                    break;
-                }
-            }
-        }
+    preload() {
+        //  this.load.crossOrigin = "anonymous";
+    //   this.load.image("button","assets/Button.jpg")
+        this.width, this.height = this.sys.game.canvas;
+        this.scale.pageAlignHorizontally = true;
+        this.scale.pageAlignVertically = true;
     }
 
-}
     
-function create() {
-    arr = new Array();
-    game.stage.smoothed=false;
-    game.stage.backgroundColor = '#ffffff';
-    var str = ['RED','BLUE','GREEN','YELLOW'];
-    for(var i = 0; i < 5; i++){
-        arr[i] = [];
-        content[i] = [];
-        for(var j = 0; j < 10; j++){
-            randomNum = randomRange(0,4);
-            arr[i][j] =game.add.text(game.world.centerX + (170 * (i - 2)), j * 60 + 60, str[randomNum], textStyle);
-            arr[i][j].anchor.set(0.5, 0.5);
-            content[i][j] = str[randomNum];
+
+    addTimer(){
+        console.log(this.timer)
+        if(this.isGameOver == false){
+            this.timer += 1;
         }
+
+        if(this.timer >= this.timelimit && this.isGameOver == false && this.level < 3){
+            this.isGameOver = true;
+            for(var i = 0; i < 5; i++){
+                for(var j = 0; j < 10; j++){
+                    this.arr[i][j].setText("");
+                }
+            }
+            var text = this.add.text(this.cameras.main.centerX - 250, this.cameras.main.centerY, "Out of time.", this.textStyleFail);
+        }
+    
     }
-    setInterval("addTimer()","1000"); //keep this here so it's not dependant on fps
+    
+
+    randomRange(min, max) { // min最小值，max最大值
+        return Math.floor(Math.random() * (max - min)) + min;
+    }
+
+    changeColor(){
+        this.timer = 0;
+        this.level += 1;
+
+        if(this.level == 1){
+            for(var i = 0; i < 5; i++){
+                for(var j = 0; j < 10; j++){
+                    switch(this.content[i][j]){
+                    case this.colors[0]:
+                        this.arr[i][j].setStyle(this.textStyleRed);
+                        break;
+                    case this.colors[1]:
+                        this.arr[i][j].setStyle(this.textStyleBlue);
+                        break;
+                    case this.colors[2]:
+                        this.arr[i][j].setStyle(this.textStyleGreen);
+                        break;
+                    case this.colors[3]:
+                        this.arr[i][j].setStyle(this.textStyleYellow);
+                        break;
+                    }
+                }
+            }
+            for(var x = 0; x < this.colors.length; x++){
+                    //button = this.add.button(this.width/2, 700, undefined, this.clickColor, this, 2, 1, 0);
+                    //button.onInputOut.add(this.colors[x], this);
+            }
+        }
+        else if(this.level == 2){
+            for(var i = 0; i < 5; i++){
+                for(var j = 0; j < 10; j++){
+                    let randomNum = this.randomRange(0,4);
+                    switch(randomNum){
+                    case 0:
+                        this.arr[i][j].setStyle(this.textStyleRed);
+                        break;
+                    case 1:
+                        this.arr[i][j].setStyle(this.textStyleBlue);
+                        break;
+                    case 2:
+                        this.arr[i][j].setStyle(this.textStyleGreen);
+                        break;
+                    case 3:
+                        this.arr[i][j].setStyle(this.textStyleYellow);
+                        break;
+                    }
+                }
+            }
+        }
+
+    }
+
+    clickColor(){
+
+    }
+        
+    create() {
+        for(var i = 0; i < 5; i++){
+            this.arr[i] = [];
+            this.content[i] = [];
+            for(var j = 0; j < 10; j++){
+                let randomNum = this.randomRange(0,4);
+                this.arr[i][j] =this.add.text(this.cameras.main.centerX + (170 * (i - 2)), j * 60 + 60, this.colors[randomNum], this.textStyle);
+                //this.arr[i][j].anchor.set(0.5, 0.5);
+                this.content[i][j] = this.colors[randomNum];
+            }
+        }
+        
+        this.finishButton = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY + 300, 'Start game', { font: "25px Arial", align:"center", borderradius:"25px", })
+            .setOrigin(0.5)
+            .setPadding(10)
+            .setStyle({ backgroundColor: '#000' })
+            .setInteractive({ useHandCursor: true })
+            .on('pointerdown', () => this.changeColor())
+            .on('pointerover', () => this.finishButton.setStyle({ fill: '#f39c12' }))
+            .on('pointerout', () => this.finishButton.setStyle({ fill: '#FFF' }))
+        setInterval(() => this.addTimer(),"1000"); //keep this here so it's not so dependant on fps
+    }
+
+    update() {
+        
+    }
+
+    render() {
+
+    }
+    
+
 }
-
-function update() {
-
-}
-
-function render() {
-
-}
-
-function randomRange(min, max) { // min最小值，max最大值
-
-    return Math.floor(Math.random() * (max - min)) + min;
-
-}
-        </script>
+config = {
+    type: Phaser.AUTO,
+    width: 1024,
+    height: 768,
+    backgroundColor: '#ffffff',
+    scene: [ Stroop ]
+    };
+const game = new Phaser.Game(config);
+</script>
            
     </body>
 </html>
