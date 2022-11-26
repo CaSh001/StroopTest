@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>phasr</title>
+        <title>Stroop Test</title>
     </head>
     <style>
     html,
@@ -21,7 +21,7 @@
   </style>
     <body>
     <div id="game">
-     <div id="btn" style = "position: absolute;top:600px;left: 50%;margin-top: -20px;margin-left: -50px;background-color: black;width:100px;height:40px;text-align:center;line-height:40px;color:white;cursor:pointer;" onclick = "changeColor()">finish</div>
+     <div id="btn" style = "position: absolute;top:600px;left: 50%;margin-top: -20px;margin-left: -50px;background-color: black;width:100px;height:40px;text-align:center;line-height:40px;color:white;cursor:pointer;" onclick = "changeColor()">Finish Subset</div>
     </div>
         <script src="js/phaser.min.js" type="text/javascript" charset="utf-8"></script>
 
@@ -45,13 +45,14 @@ var content = [];
 var timer = 0;
 var isGameOver = false;
 var level = 0;
+var timelimit = 45
+
 function addTimer(){
     if(isGameOver == false){
         timer += 1;
-        console.log(timer);
     }
 
-    if(timer >= 49 && isGameOver == false && level < 3){
+    if(timer >= timelimit && isGameOver == false && level < 3){
         isGameOver = true;
         for(var i = 0; i < 5; i++){
             for(var j = 0; j < 10; j++){
@@ -71,17 +72,19 @@ function changeColor(){
     if(level == 1){
         for(var i = 0; i < 5; i++){
             for(var j = 0; j < 10; j++){
-                if(content[i][j] == "Red"){
+                switch(content[i][j]){
+                case "Red":
                     arr[i][j].setStyle(textStyleRed);
-                }
-                if(content[i][j] == "Blue"){
+                    break;
+                case "Blue":
                     arr[i][j].setStyle(textStyleBlue);
-                }
-                if(content[i][j] == "Green"){
+                    break;
+                case "Green":
                     arr[i][j].setStyle(textStyleGreen);
-                }
-                if(content[i][j] == "Yellow"){
+                    break;
+                case "Yellow":
                     arr[i][j].setStyle(textStyleYellow);
+                    break;
                 }
             }
         }
@@ -90,17 +93,19 @@ function changeColor(){
         for(var i = 0; i < 5; i++){
             for(var j = 0; j < 10; j++){
                 randomNum = randomRange(0,4);
-                if(randomNum == 0){
+                switch(randomNum){
+                case 0:
                     arr[i][j].setStyle(textStyleRed);
-                }
-                if(randomNum == 1){
+                    break;
+                case 1:
                     arr[i][j].setStyle(textStyleBlue);
-                }
-                if(randomNum == 2){
+                    break;
+                case 2:
                     arr[i][j].setStyle(textStyleGreen);
-                }
-                if(randomNum == 3){
+                    break;
+                case 3:
                     arr[i][j].setStyle(textStyleYellow);
+                    break;
                 }
             }
         }
@@ -109,7 +114,6 @@ function changeColor(){
 }
     
 function create() {
-
     arr = new Array();
     game.stage.smoothed=false;
     game.stage.backgroundColor = '#ffffff';
@@ -124,7 +128,7 @@ function create() {
             content[i][j] = str[randomNum];
         }
     }
-    setInterval("addTimer()","1000");
+    setInterval("addTimer()","1000"); //keep this here so it's not dependant on fps
 }
 
 function update() {
